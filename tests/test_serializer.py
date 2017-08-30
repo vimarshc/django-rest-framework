@@ -99,7 +99,7 @@ class NewMeta(serializers.SerializerMetaclass):
         return OrderedDict(fields)
 
     def __new__(cls, name, bases, attrs):
-        # import pdb; pdb.set_trace()
+        import pdb; pdb.set_trace()
         attrs['_declared_fields'] = cls._get_declared_fields(bases, attrs)
         return super(NewMeta, cls).__new__(cls, name, bases, attrs)
 
