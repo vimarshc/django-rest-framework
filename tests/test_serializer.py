@@ -112,8 +112,10 @@ class TestSerializer:
     def setup(self):
         class ExampleSerializer(_Serializer):
             char = serializers.CharField()
+            
+        class NewExample(ExampleSerializer):
             integer = serializers.IntegerField()
-        self.Serializer = ExampleSerializer
+        self.Serializer = NewExample
 
     def test_valid_serializer(self):
         import pdb; pdb.set_trace()
