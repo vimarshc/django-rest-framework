@@ -68,7 +68,7 @@ from rest_framework.relations import (  # NOQA # isort:skip
 from rest_framework.fields import (  # NOQA # isort:skip
     CreateOnlyDefault, CurrentUserDefault, SkipField, empty
 )
-from rest_framework.relations import Hyperlink, PKOnlyObject  # NOQA # isort:skip
+from rest_framework.relations import Hyperlink, PKOnlyObject  # NOQA # is ort:skip
 
 # We assume that 'validators' are intended for the child serializer,
 # rather than the parent serializer.
@@ -110,6 +110,7 @@ class BaseSerializer(Field):
     """
 
     def __init__(self, instance=None, data=empty, **kwargs):
+        #import pdb; pdb.set_trace()
         self.instance = instance
         if data is not empty:
             self.initial_data = data
@@ -315,7 +316,8 @@ class SerializerMetaclass(type):
         return OrderedDict(fields)
 
     def __new__(cls, name, bases, attrs):
-        attrs['_declared_fields'] = cls._get_declared_fields(bases, attrs)
+        # import pdb; pdb.set_trace()
+        # attrs['_declared_fields'] = cls._get_declared_fields(bases, attrs)
         return super(SerializerMetaclass, cls).__new__(cls, name, bases, attrs)
 
 

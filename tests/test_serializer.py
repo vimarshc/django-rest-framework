@@ -65,15 +65,58 @@ class TestFieldImports:
 
 # Tests for core functionality.
 # -----------------------------
+from collections import Mapping, OrderedDict
+
+
+
+class NewMeta(serializers.SerializerMetaclass):
+    """
+    This metaclass sets a dictionary named `_declared_fields` on the class.
+
+    Any instances of `Field` included as attributes on either the class
+    or on any of its superclasses will be include in the
+    `_declared_fields` dictionary.
+    """
+
+    @classmethod
+    def _get_declared_fields(cls, bases, attrs):
+        fields = [(field_name, attrs.pop(field_name))
+                  for field_name, obj in list(attrs.items())
+                  if isinstance(obj, Field)]
+        fields.sort(key=lambda x: x[1]._creation_counter)
+
+        # If this class is subclassing another Serializer, add that Serializer's
+        # fields.  Note that we loop over the bases in *reverse*. This is necessary
+        # in order to maintain the correct order of fields.
+        for base in reversed(bases):
+            if hasattr(base, '_declared_fields'):
+                fields = [
+                    (field_name, obj) for field_name, obj
+                    in base._declared_fields.items()
+                    if field_name not in attrs
+                ] + fields
+
+        return OrderedDict(fields)
+
+    def __new__(cls, name, bases, attrs):
+        # import pdb; pdb.set_trace()
+        attrs['_declared_fields'] = cls._get_declared_fields(bases, attrs)
+        return super(NewMeta, cls).__new__(cls, name, bases, attrs)
+
+from django.utils import six, timezone
+@six.add_metaclass(NewMeta)
+class _Serializer(serializers.Serializer):
+    pass
 
 class TestSerializer:
     def setup(self):
-        class ExampleSerializer(serializers.Serializer):
+        class ExampleSerializer(_Serializer):
             char = serializers.CharField()
             integer = serializers.IntegerField()
         self.Serializer = ExampleSerializer
 
     def test_valid_serializer(self):
+        import pdb; pdb.set_trace()
         serializer = self.Serializer(data={'char': 'abc', 'integer': 123})
         assert serializer.is_valid()
         assert serializer.validated_data == {'char': 'abc', 'integer': 123}
