@@ -70,12 +70,13 @@ class TestListSerializerContainingNestedSerializer:
             child = TestSerializer()
 
         self.Serializer = ObjectListSerializer
-
+        
     def test_validate(self):
         """
         Validating a list of dictionaries should return a list of
         validated dictionaries.
         """
+        import pdb; pdb.set_trace()
         input_data = [
             {"integer": "123", "boolean": "true"},
             {"integer": "456", "boolean": "false"}
@@ -137,6 +138,102 @@ class TestListSerializerContainingNestedSerializer:
         serializer = self.Serializer(data=input_data)
         assert serializer.is_valid()
         assert serializer.validated_data == expected_output
+
+
+# class TestQwertySerializer:
+#     """
+#     Tests for qwerty
+#     """
+
+#     def setup(self):
+#         class TestSerializer(serializers.Serializer):
+#             integer = serializers.IntegerField()
+#             boolean = serializers.BooleanField()
+
+#             def create(self, validated_data):
+#                 return BasicObject(**validated_data)
+
+#         class X_Serializer(serializers.Serializer):
+#             a = serializers.ListField(child=TestSerializer(many=True))
+
+#             def create(self, validated_data):
+#                 return BasicObject(**validated_data)            
+
+#         class Y_Serializer(serializers.Serializer):
+#             b = serializers.DictField(child=TestSerializer(many=True))
+            
+#             def create(self, validated_data):
+#                 return BasicObject(**validated_data)
+
+#         self.X_Serializer = X_Serializer
+#         self.Y_Serializer = Y_Serializer
+
+#     def text_qwerty(self):
+#         import pdb; pdb.set_trace()
+#         input_data = {
+#             "a": [{"integer":"42", "boolean":true}]#,{"integer":"24", "boolean":false},{"integer":"12", "boolean":true}]
+#         }
+
+#         expected_output = {
+#             "a": [
+#                 {"integer": 42, "boolean": True},
+#                 # {"integer": 24, "boolean": False},
+#                 # {"integer": 12, "boolean": True}
+#             ]
+#         }
+
+#         serializer = self.X_Serializer(data=input_data)
+
+#         assert serializer.is_valid()
+#         assert serializer.validated_data == expected_output
+
+
+
+# class TestYo:
+    """
+    Tests for using a ListSerializer as a field.
+    """
+
+    # def setup(self):
+    #     class TestSerializer(serializers.Serializer):
+    #         integers = serializers.ListSerializer(child=serializers.IntegerField())
+    #         booleans = serializers.ListSerializer(child=serializers.BooleanField())
+
+    #         def create(self, validated_data):
+    #             return BasicObject(**validated_data)
+
+    #     class X_Serializer(serializers.Serializer):
+    #         a = serializers.ListField(child=TestSerializer(many=True))
+
+    #         def create(self, validated_data):
+    #             return BasicObject(**validated_data)            
+
+    #     class Y_Serializer(serializers.Serializer):
+    #         b = serializers.DictField(child=TestSerializer(many=True))
+            
+    #         def create(self, validated_data):
+    #             return BasicObject(**validated_data)
+
+    #     self.Serializer = X_Serializer
+
+    # def test_validate(self):
+    #     """
+    #     Validating a list of items should return a list of validated items.
+    #     """
+    #     input_data = {
+    #         "a": [{"integer":"42", "boolean":true}],{"integer":"24", "boolean":false},{"integer":"12", "boolean":true}]
+    #     }
+
+    #     expected_output = {
+    #         "a": [
+    #             [{"integer": 42, "boolean": True}],
+    #             [{"integer": 24, "boolean": False}],
+    #             [{"integer": 12, "boolean": True}]
+    #         ]
+    #     }
+    #     serializer = self.Serializer(data=input_data)
+    #     assert serializer.is_valid()
+    #     assert serializer.validated_data == expected_output
 
 
 class TestNestedListSerializer:
